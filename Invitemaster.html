@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InviteMaster Pro - Professional Invitation Designer</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+        :root {
+            --primary: #d4a373;
+            --secondary: #fefae0;
+            --accent: #ccd5ae;
+            --dark: #333333;
+            --light: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Playfair Display', serif;
+        }
+        .card-preview {
+            transition: all 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .texture-paper {
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            background-repeat: repeat;
+            background-size: 200px;
+            opacity: 0.2;
+        }
+        
+        .texture-linen {
+            background-image: url('https://www.transparenttextures.com/patterns/linen.png');
+            background-repeat: repeat;
+            background-size: 200px;
+            opacity: 0.2;
+        }
+h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #b3895b;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent);
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #b8c39b;
+            transform: translateY(-2px);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap');
+.card-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        .template-option {
+            transition: all 0.3s ease;
+        }
+        .template-option:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .template-option.selected {
+            border: 3px solid #d4a373;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-amber-50" id="vanta-bg">
+<div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-stone-900 text-amber-50 py-6 shadow-lg">
+<div class="container mx-auto px-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i data-feather="send" class="text-amber-300"></i>
+                    <h1 class="text-2xl font-serif font-bold">InviteMaster Pro</h1>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="hover:text-amber-300 transition">Templates</a></li>
+                        <li><a href="#" class="hover:text-amber-300 transition">Pricing</a></li>
+                        <li><a href="#" class="hover:text-amber-300 transition">About</a></li>
+                        <li><a href="#" class="hover:text-amber-300 transition">Contact</a></li>
+                    </ul>
+                </nav>
+                <button class="md:hidden">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-serif font-bold text-stone-900 mb-4">Create Stunning Invitations</h2>
+                <p class="text-xl text-stone-700 max-w-2xl mx-auto">Design professional invitations that impress your guests. Perfect for weddings, corporate events, and special occasions.</p>
+</div>
+
+            <!-- Form Container -->
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Form Steps -->
+        <div class="lg:w-1/2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-stone-200">
+<div class="flex mb-8">
+                        <div class="w-1/4 text-center">
+                            <div class="mx-auto w-10 h-10 rounded-full bg-amber-300 text-stone-900 font-bold flex items-center justify-center">1</div>
+                            <p class="text-xs mt-2">Select Template</p>
+                        </div>
+                        <div class="w-1/4 text-center">
+                            <div class="mx-auto w-10 h-10 rounded-full bg-stone-200 text-stone-700 font-bold flex items-center justify-center">2</div>
+                            <p class="text-xs mt-2">Customize</p>
+                        </div>
+                        <div class="w-1/4 text-center">
+                            <div class="mx-auto w-10 h-10 rounded-full bg-stone-200 text-stone-700 font-bold flex items-center justify-center">3</div>
+                            <p class="text-xs mt-2">Details</p>
+                        </div>
+                        <div class="w-1/4 text-center">
+                            <div class="mx-auto w-10 h-10 rounded-full bg-stone-200 text-stone-700 font-bold flex items-center justify-center">4</div>
+                            <p class="text-xs mt-2">Download</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Template Selection -->
+                    <div class="form-step active" id="step1">
+                        <h3 class="text-2xl font-serif font-bold text-stone-800 mb-6">Choose Your Template</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                                <div class="template-option p-4 rounded-lg bg-amber-100 border-2 border-amber-300 cursor-pointer flex flex-col items-center justify-center" data-template="classic">
+                                    <i data-feather="heart" class="w-12 h-12 text-amber-700 mb-2"></i>
+                                    <p class="text-center font-medium text-stone-900">Classic</p>
+                                </div>
+                                <div class="template-option p-4 rounded-lg bg-amber-100 border-2 border-amber-300 cursor-pointer flex flex-col items-center justify-center" data-template="modern">
+                                    <i data-feather="box" class="w-12 h-12 text-amber-700 mb-2"></i>
+                                    <p class="text-center font-medium text-stone-900">Modern</p>
+                                </div>
+                                <div class="template-option p-4 rounded-lg bg-amber-100 border-2 border-amber-300 cursor-pointer flex flex-col items-center justify-center" data-template="elegant">
+                                    <i data-feather="feather" class="w-12 h-12 text-amber-700 mb-2"></i>
+                                    <p class="text-center font-medium text-stone-900">Elegant</p>
+                                </div>
+                                <div class="template-option p-4 rounded-lg bg-amber-100 border-2 border-amber-300 cursor-pointer flex flex-col items-center justify-center" data-template="luxury">
+                                    <i data-feather="award" class="w-12 h-12 text-amber-700 mb-2"></i>
+                                    <p class="text-center font-medium text-stone-900">Luxury</p>
+                                </div>
+</div>
+                        <div class="mt-8 flex justify-end">
+                            <button class="next-step btn-primary px-6 py-3 rounded-lg font-medium">Next <i data-feather="arrow-right" class="ml-2"></i></button>
+</div>
+                    </div>
+
+                    <!-- Step 2: Customization -->
+                    <div class="form-step" id="step2">
+                        <h3 class="text-2xl font-serif font-bold text-stone-800 mb-6">Customize Your Design</h3>
+                        
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Color Scheme</label>
+                            <div class="grid grid-cols-6 gap-3">
+                                <div class="color-option bg-stone-900" data-color="stone"></div>
+                                <div class="color-option bg-amber-800" data-color="amber"></div>
+                                <div class="color-option bg-stone-700" data-color="taupe"></div>
+                                <div class="color-option bg-amber-900" data-color="darkamber"></div>
+                                <div class="color-option bg-stone-600" data-color="slate"></div>
+                                <div class="color-option bg-rose-700" data-color="rose"></div>
+                                <div class="color-option bg-emerald-700" data-color="emerald"></div>
+                                <div class="color-option bg-blue-700" data-color="blue"></div>
+                                <div class="color-option bg-purple-700" data-color="purple"></div>
+                                <div class="color-option bg-pink-700" data-color="pink"></div>
+                                <div class="color-option bg-indigo-700" data-color="indigo"></div>
+                                <div class="color-option bg-teal-700" data-color="teal"></div>
+                            </div>
+</div>
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Font Style</label>
+                            <select class="w-full p-2 border border-stone-300 rounded" id="fontStyleSelect">
+                                <option value="serif">Serif (Classic)</option>
+                                <option value="sans-serif">Sans-serif (Modern)</option>
+                                <option value="script">Script (Elegant)</option>
+                                <option value="display">Display (Bold)</option>
+                            </select>
+                        </div>
+<div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Layout</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 layout-option" data-layout="portrait">Portrait</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 layout-option" data-layout="landscape">Landscape</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 layout-option" data-layout="square">Square</div>
+</div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Border Style</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 border-option" data-border="none">None</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 border-option" data-border="simple">Simple</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 border-option" data-border="ornate">Ornate</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 border-option" data-border="modern">Modern</div>
+</div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Pattern Overlay</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 pattern-option" data-pattern="none">None</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 pattern-option" data-pattern="dots">Dots</div>
+                                <div class="p-2 border rounded text-center cursor-pointer hover:bg-stone-100 pattern-option" data-pattern="stripes">Stripes</div>
+</div>
+                        </div>
+<div class="flex justify-between mt-8">
+                            <button class="prev-step btn-secondary px-6 py-3 rounded-lg font-medium"><i data-feather="arrow-left" class="mr-2"></i> Back</button>
+                            <button class="next-step btn-primary px-6 py-3 rounded-lg font-medium" onclick="updatePreview()">Next <i data-feather="arrow-right" class="ml-2"></i></button>
+</div>
+</div>
+
+                    <!-- Step 3: Content Details -->
+                    <div class="form-step" id="step3">
+                        <h3 class="text-2xl font-serif font-bold text-stone-800 mb-6">Invitation Details</h3>
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Event Title*</label>
+                            <input type="text" class="w-full p-2 border border-stone-300 rounded" placeholder="e.g., Wedding Celebration" id="eventTitle" oninput="updatePreview()">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Host Name(s)*</label>
+                            <input type="text" class="w-full p-2 border border-stone-300 rounded" placeholder="e.g., John & Jane" id="hostNames" oninput="updatePreview()">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-stone-700 mb-2">Event Date*</label>
+                                <input type="date" class="w-full p-2 border border-stone-300 rounded" id="eventDate" onchange="formatDate()">
+                            </div>
+                            <div>
+                                <label class="block text-stone-700 mb-2">Event Time*</label>
+                                <input type="time" class="w-full p-2 border border-stone-300 rounded" id="eventTime" onchange="updatePreview()">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Venue Name*</label>
+                            <input type="text" class="w-full p-2 border border-stone-300 rounded" placeholder="e.g., The Grand Ballroom" id="venueName" oninput="updatePreview()">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Venue Address</label>
+                            <input type="text" class="w-full p-2 border border-stone-300 rounded" placeholder="Street, City, State" id="venueAddress">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Dress Code</label>
+                            <select class="w-full p-2 border border-stone-300 rounded" id="dressCode">
+                                <option value="">None specified</option>
+                                <option value="Black Tie">Black Tie</option>
+                                <option value="Formal">Formal</option>
+                                <option value="Semi-Formal">Semi-Formal</option>
+                                <option value="Casual">Casual</option>
+                                <option value="Theme">Theme (Specify Below)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Additional Details</label>
+                            <textarea class="w-full p-2 border border-stone-300 rounded" rows="3" placeholder="Special instructions, theme details, etc." id="additionalDetails" oninput="updatePreview()"></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-stone-700 mb-2">RSVP Deadline</label>
+                                <input type="date" class="w-full p-2 border border-stone-300 rounded" id="rsvpDeadline">
+                            </div>
+                            <div>
+                                <label class="block text-stone-700 mb-2">RSVP Contact*</label>
+                                <input type="text" class="w-full p-2 border border-stone-300 rounded" placeholder="Phone or email" id="rsvpContact" oninput="updatePreview()">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-stone-700 mb-2">Number of Guests</label>
+                            <input type="number" min="1" class="w-full p-2 border border-stone-300 rounded" placeholder="Estimated number of guests" id="guestCount">
+                        </div>
+<div class="flex justify-between mt-8">
+                            <button class="prev-step btn-secondary px-6 py-3 rounded-lg font-medium"><i data-feather="arrow-left" class="mr-2"></i> Back</button>
+                            <button class="next-step btn-primary px-6 py-3 rounded-lg font-medium" onclick="finalizeDetails()">Next <i data-feather="arrow-right" class="ml-2"></i></button>
+</div>
+</div>
+
+                    <!-- Step 4: Finalize & Download -->
+                    <div class="form-step" id="step4">
+                        <h3 class="text-2xl font-serif font-bold text-stone-800 mb-6">Ready to Download</h3>
+                        
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">File Format</label>
+                            <div class="flex space-x-4">
+                                <button class="flex items-center px-4 py-2 border rounded-lg">
+                                    <i data-feather="file" class="mr-2"></i> PDF
+                                </button>
+                                <button class="flex items-center px-4 py-2 border rounded-lg">
+                                    <i data-feather="image" class="mr-2"></i> PNG
+                                </button>
+                                <button class="flex items-center px-4 py-2 border rounded-lg">
+                                    <i data-feather="file-text" class="mr-2"></i> JPG
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-stone-700 mb-2">Quality</label>
+                            <select class="w-full p-2 border border-stone-300 rounded">
+                                <option>Standard (300dpi)</option>
+                                <option>High (600dpi)</option>
+                                <option>Print Ready (1200dpi)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span>Include crop marks and bleed</span>
+                            </label>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-4 mt-8">
+                            <button class="flex-1 btn-secondary px-6 py-3 rounded-lg font-medium flex items-center justify-center">
+                                <i data-feather="save" class="mr-2"></i> Save Template
+                            </button>
+                            <button class="flex-1 btn-primary px-6 py-3 rounded-lg font-medium flex items-center justify-center" onclick="generateInvitation()">
+                                <i data-feather="download" class="mr-2"></i> Download Design
+</button>
+</div>
+                        
+                        <div class="mt-8 border-t pt-6">
+                            <h4 class="text-lg font-serif font-bold text-stone-800 mb-4">Share Your Invitation</h4>
+                            <div class="flex space-x-4">
+                            <button class="p-2 bg-[#1877f2] text-white rounded-full hover:scale-110 transition">
+                                <i data-feather="facebook"></i>
+                            </button>
+                            <button class="p-2 bg-[#1da1f2] text-white rounded-full hover:scale-110 transition">
+                                <i data-feather="twitter"></i>
+                            </button>
+                            <button class="p-2 bg-gradient-to-r from-[#f09433] via-[#e6683c] to-[#dc2743] text-white rounded-full hover:scale-110 transition">
+                                <i data-feather="instagram"></i>
+                            </button>
+                            <button class="p-2 bg-[#ea4335] text-white rounded-full hover:scale-110 transition">
+                                <i data-feather="mail"></i>
+                            </button>
+</div>
+                        </div>
+                        
+                        <div class="flex justify-start mt-8">
+                            <button class="prev-step btn-secondary px-6 py-3 rounded-lg font-medium"><i data-feather="arrow-left" class="mr-2"></i> Back</button>
+</div>
+                    </div>
+                </div>
+
+                <!-- Preview Panel -->
+                <div class="lg:w-1/2">
+                    <div class="sticky top-8">
+                        <h3 class="text-xl font-serif font-bold text-stone-800 mb-4">Live Preview</h3>
+                        <div class="card-preview aspect-[4/5] w-full max-w-md mx-auto rounded-xl p-10 bg-gradient-to-br from-stone-50 to-amber-50 shadow-2xl border-8 border-stone-200 relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-20" style="background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');"></div>
+                            <div class="relative z-10 flex flex-col justify-between h-full">
+                                <div class="text-center">
+                                    <h4 class="text-2xl font-serif mb-2 text-stone-700 tracking-widest">WEDDING CELEBRATION</h4>
+                                    <div class="w-16 h-px bg-stone-400 mx-auto my-3"></div>
+                                    <p class="text-xs text-stone-500 uppercase tracking-widest">Together with their families</p>
+                                </div>
+                                <div class="text-center">
+                                    <h2 class="text-5xl font-serif font-bold mb-3 text-stone-900 tracking-tight leading-tight">John & Jane</h2>
+                                    <div class="w-24 h-px bg-stone-400 mx-auto my-3"></div>
+                                    <p class="text-xs uppercase tracking-widest text-stone-500">request the pleasure of your company</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-2 text-stone-700 italic">Saturday, the tenth of June</p>
+                                    <p class="mb-2 text-stone-700 italic">at five o'clock in the evening</p>
+                                    <p class="mb-4 text-stone-700 font-medium text-lg">The Grand Ballroom</p>
+                                    <p class="text-xs text-stone-500 uppercase tracking-widest">Kindly RSVP by May 20th</p>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 right-4 w-16 h-16 rounded-full bg-amber-200/30 border border-amber-300/50"></div>
+                            <div class="absolute bottom-4 left-4 w-12 h-12 rounded-full bg-stone-200/30 border border-stone-300/50"></div>
+                        </div>
+<div class="mt-6 text-center text-sm text-stone-500">
+                            <p>Changes appear in real-time as you customize</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Footer -->
+        <footer class="bg-stone-900 text-beige-100 py-12 mt-16">
+            <div class="container mx-auto px-4">
+<div class="border-t border-stone-800 mt-8 pt-8 text-center text-stone-400">
+                    <p>&copy; 2023 InviteMaster Pro. All rights reserved.</p>
+                    <p class="mt-2">Developed with ❤️ by Rushan Haque</p>
+                    <div class="flex justify-center space-x-4 mt-4">
+                            <a href="https://www.linkedin.com/in/rushanhaque" target="_blank" class="text-stone-400 hover:text-blue-500 transition">
+                                <i data-feather="linkedin"></i>
+                            </a>
+                            <a href="https://www.instagram.com/rushanhaque" target="_blank" class="text-stone-400 hover:text-pink-500 transition">
+                                <i data-feather="instagram"></i>
+                            </a>
+                            <a href="mailto:rushanulhaque@gmail.com" class="text-stone-400 hover:text-red-500 transition">
+                                <i data-feather="mail"></i>
+                            </a>
+                            <a href="https://github.com/rushanhaque" target="_blank" class="text-stone-400 hover:text-stone-600 transition">
+                                <i data-feather="github"></i>
+                            </a>
+                            <a href="https://twitter.com/rushanhaque" target="_blank" class="text-stone-400 hover:text-blue-400 transition">
+                                <i data-feather="twitter"></i>
+                            </a>
+                            <a href="https://www.facebook.com/rushanhaque" target="_blank" class="text-stone-400 hover:text-blue-600 transition">
+                                <i data-feather="facebook"></i>
+                            </a>
+</div>
+                </div>
+</div>
+        </footer>
+    </div>
+    <script>
+        // Global variables to store design data
+        let currentDesign = {
+            template: 'classic',
+            colorScheme: 'amber',
+            fontStyle: 'Playfair Display',
+            layout: 'portrait',
+            borderStyle: 'elegant',
+            pattern: 'subtle',
+            texture: 'paper',
+            embellishments: true,
+eventTitle: 'Wedding Celebration',
+            hostNames: 'John & Jane',
+            dateTime: 'Saturday, the tenth of June at five o\'clock in the evening',
+            location: 'The Grand Ballroom',
+            additionalDetails: 'Kindly RSVP by May 20th',
+            rsvpContact: 'johnandjane@example.com'
+        };
+        // Initialize Vanta.js background
+        VANTA.WAVES({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xd4a373,
+            shininess: 70.00,
+            waveHeight: 20.00,
+            waveSpeed: 0.50,
+            zoom: 0.8
+        });
+// Initialize Feather Icons
+        feather.replace();
+        // Handle template selection
+        function handleTemplateSelection() {
+            const selectedTemplate = document.querySelector('.template-option.selected');
+            if (selectedTemplate) {
+                currentDesign.template = selectedTemplate.getAttribute('data-template');
+                updatePreview();
+                nextStep();
+            } else {
+                alert('Please select a template first');
+            }
+        }
+
+        // Update preview card with current design
+        function updatePreview() {
+            const previewCard = document.querySelector('.card-preview');
+            // Apply all design styles
+            let cardClasses = `card-preview aspect-[4/5] w-full max-w-md mx-auto rounded-xl p-10 shadow-2xl relative overflow-hidden flex flex-col justify-between bg-gradient-to-br from-${currentDesign.colorScheme}-50 to-stone-50`;
+            
+            // Add border style
+            if (currentDesign.borderStyle === 'elegant') {
+                cardClasses += ` border-8 border-stone-200`;
+            } else if (currentDesign.borderStyle === 'luxury') {
+                cardClasses += ` border-t-8 border-l-8 border-r-4 border-b-4 border-stone-300/50`;
+            }
+            
+            // Add texture
+            if (currentDesign.texture === 'paper') {
+                cardClasses += ` texture-paper`;
+            } else if (currentDesign.texture === 'linen') {
+                cardClasses += ` texture-linen`;
+            }
+previewCard.className = cardClasses;
+// Update content
+            document.querySelector('.card-preview h4').textContent = currentDesign.eventTitle;
+            document.querySelector('.card-preview h2').textContent = currentDesign.hostNames;
+            
+            const detailsDiv = document.querySelector('.card-preview > div:last-child');
+            detailsDiv.innerHTML = `
+                <p class="mb-2 text-${currentDesign.colorScheme}-700">${currentDesign.dateTime}</p>
+                <p class="mb-4 text-${currentDesign.colorScheme}-700">${currentDesign.location}</p>
+                <p class="text-sm text-${currentDesign.colorScheme}-600">${currentDesign.additionalDetails}</p>
+            `;
+        }
+        // Format date from input to display format
+        function formatDate() {
+            const dateInput = document.getElementById('eventDate').value;
+            const timeInput = document.getElementById('eventTime').value;
+            
+            if (dateInput) {
+                const date = new Date(dateInput);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                currentDesign.dateTime = date.toLocaleDateString('en-US', options);
+                
+                if (timeInput) {
+                    const [hours, minutes] = timeInput.split(':');
+                    const timeString = new Date(0, 0, 0, hours, minutes).toLocaleTimeString('en-US', 
+                        { hour: 'numeric', minute: '2-digit', hour12: true });
+                    currentDesign.dateTime += ` at ${timeString}`;
+                }
+                
+                updatePreview();
+            }
+        }
+
+        // Update preview with all current values
+        function updatePreview() {
+            currentDesign.eventTitle = document.getElementById('eventTitle').value || 'Event Title';
+            currentDesign.hostNames = document.getElementById('hostNames').value || 'Host Names';
+            currentDesign.location = document.getElementById('venueName').value || 'Venue Location';
+            currentDesign.additionalDetails = document.getElementById('additionalDetails').value || 'Additional details';
+            currentDesign.rsvpContact = document.getElementById('rsvpContact').value || 'RSVP contact info';
+            
+            const previewCard = document.querySelector('.card-preview');
+            const previewContent = `
+                <div class="absolute inset-0 opacity-20" style="background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');"></div>
+                <div class="relative z-10 flex flex-col justify-between h-full">
+                    <div class="text-center">
+                        <h4 class="text-2xl font-serif mb-2 text-stone-700 tracking-widest">${currentDesign.eventTitle.toUpperCase()}</h4>
+                        <div class="w-16 h-px bg-stone-400 mx-auto my-3"></div>
+                        <p class="text-xs text-stone-500 uppercase tracking-widest">Together with their families</p>
+                    </div>
+                    <div class="text-center">
+                        <h2 class="text-5xl font-serif font-bold mb-3 text-stone-900 tracking-tight leading-tight">${currentDesign.hostNames}</h2>
+                        <div class="w-24 h-px bg-stone-400 mx-auto my-3"></div>
+                        <p class="text-xs uppercase tracking-widest text-stone-500">request the pleasure of your company</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-2 text-stone-700 italic">${currentDesign.dateTime || 'Date and time'}</p>
+                        <p class="mb-4 text-stone-700 font-medium text-lg">${currentDesign.location}</p>
+                        <p class="text-xs text-stone-500 uppercase tracking-widest">${currentDesign.additionalDetails}</p>
+                    </div>
+                </div>
+                ${currentDesign.embellishments ? `
+                <div class="absolute top-4 right-4 w-16 h-16 rounded-full bg-${currentDesign.colorScheme}-200/30 border border-${currentDesign.colorScheme}-300/50"></div>
+                <div class="absolute bottom-4 left-4 w-12 h-12 rounded-full bg-stone-200/30 border border-stone-300/50"></div>
+                ` : ''}
+`;
+            
+            previewCard.innerHTML = previewContent;
+        }
+
+        // Finalize details from form
+        function finalizeDetails() {
+            updatePreview();
+            nextStep();
+        }
+// Download invitation
+        function downloadInvitation() {
+            const { jsPDF } = window.jspdf;
+            const previewCard = document.querySelector('.card-preview');
+            
+            html2canvas(previewCard).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF({
+                    orientation: currentDesign.layout === 'portrait' ? 'portrait' : 'landscape',
+                    unit: 'mm'
+                });
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('invitation.pdf');
+            });
+        }
+
+        // Form step navigation
+document.querySelectorAll('.next-step').forEach(button => {
+            button.addEventListener('click', () => {
+                const currentStep = document.querySelector('.form-step.active');
+                const nextStep = currentStep.nextElementSibling;
+                
+                currentStep.classList.remove('active');
+                nextStep.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.prev-step').forEach(button => {
+            button.addEventListener('click', () => {
+                const currentStep = document.querySelector('.form-step.active');
+                const prevStep = currentStep.previousElementSibling;
+                
+                currentStep.classList.remove('active');
+                prevStep.classList.add('active');
+            });
+        });
+        // Template selection
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.template-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                currentDesign.template = this.getAttribute('data-template');
+            });
+        });
+
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(color => {
+            color.addEventListener('click', function() {
+                currentDesign.colorScheme = this.getAttribute('data-color');
+                updatePreview();
+            });
+        });
+        // Font style selection
+        document.querySelector('#fontStyleSelect').addEventListener('change', function() {
+            currentDesign.fontStyle = this.value;
+            updatePreview();
+        });
+
+        // Layout selection
+        document.querySelectorAll('.layout-option').forEach(layout => {
+            layout.addEventListener('click', function() {
+                document.querySelectorAll('.layout-option').forEach(opt => {
+                    opt.classList.remove('border-amber-300', 'bg-amber-100');
+                });
+                this.classList.add('border-amber-300', 'bg-amber-100');
+                currentDesign.layout = this.getAttribute('data-layout');
+                updatePreview();
+            });
+        });
+
+        // Border style selection
+        document.querySelectorAll('.border-option').forEach(border => {
+            border.addEventListener('click', function() {
+                document.querySelectorAll('.border-option').forEach(opt => {
+                    opt.classList.remove('border-amber-300', 'bg-amber-100');
+                });
+                this.classList.add('border-amber-300', 'bg-amber-100');
+                currentDesign.borderStyle = this.getAttribute('data-border');
+                updatePreview();
+            });
+        });
+
+        // Pattern selection
+        document.querySelectorAll('.pattern-option').forEach(pattern => {
+            pattern.addEventListener('click', function() {
+                document.querySelectorAll('.pattern-option').forEach(opt => {
+                    opt.classList.remove('border-amber-300', 'bg-amber-100');
+                });
+                this.classList.add('border-amber-300', 'bg-amber-100');
+                currentDesign.pattern = this.getAttribute('data-pattern');
+                updatePreview();
+            });
+        });
+// Layout selection
+        document.querySelectorAll('[data-layout]').forEach(layout => {
+            layout.addEventListener('click', function() {
+                currentDesign.layout = this.getAttribute('data-layout');
+                updatePreview();
+            });
+        });
+
+        // Border style selection
+        document.querySelectorAll('[data-border]').forEach(border => {
+            border.addEventListener('click', function() {
+                currentDesign.borderStyle = this.getAttribute('data-border');
+                updatePreview();
+            });
+        });
+
+        // Pattern selection
+        document.querySelectorAll('[data-pattern]').forEach(pattern => {
+            pattern.addEventListener('click', function() {
+                currentDesign.pattern = this.getAttribute('data-pattern');
+                updatePreview();
+            });
+        });
+
+        // Generate invitation card function
+        async function generateInvitation() {
+            const previewCard = document.querySelector('.card-preview');
+            
+            // Add loading state
+            previewCard.innerHTML = '<div class="flex items-center justify-center h-full"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-stone-800"></div></div>';
+            
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Generate the final card
+            updatePreview();
+            
+            // Scroll to preview section
+            previewCard.scrollIntoView({ behavior: 'smooth' });
+            
+            // Show success message
+            alert('Your invitation has been successfully generated! You can now download or share it.');
+        }
+// Helper function for step navigation
+        function nextStep() {
+            const currentStep = document.querySelector('.form-step.active');
+            const nextStep = currentStep.nextElementSibling;
+            
+            currentStep.classList.remove('active');
+            nextStep.classList.add('active');
+            
+            // Update step indicators
+            const stepIndicators = document.querySelectorAll('.flex.mb-8 div div');
+            const currentStepIndex = Array.from(document.querySelectorAll('.form-step')).indexOf(currentStep);
+            stepIndicators[currentStepIndex].classList.remove('bg-stone-200', 'text-stone-700');
+            stepIndicators[currentStepIndex].classList.add('bg-amber-300', 'text-stone-900');
+            
+            if (nextStepIndex < stepIndicators.length - 1) {
+                stepIndicators[nextStepIndex].classList.remove('bg-stone-200', 'text-stone-700');
+                stepIndicators[nextStepIndex].classList.add('bg-amber-300', 'text-stone-900');
+            }
+        }
+</script>
+</body>
+</html>
